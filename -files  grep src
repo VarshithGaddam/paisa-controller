@@ -1,0 +1,29 @@
+[33mcommit 8266d4d247a776d32608f5733b06c092276e321b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Gaddam Varshith <varshthg2004@gmail.com>
+Date:   Mon Mar 3 02:17:41 2025 +0530
+
+    Initial commit: Add all Paisa Controller project files
+
+A	.firebaserc
+A	.gitignore
+A	README.md
+A	build/asset-manifest.json
+A	build/favicon.ico
+A	build/index.html
+A	build/static/css/main.cbf17bec.css
+A	build/static/css/main.cbf17bec.css.map
+A	build/static/js/488.578e0f1a.chunk.js
+A	build/static/js/488.578e0f1a.chunk.js.map
+A	build/static/js/main.b5a7527d.js
+A	build/static/js/main.b5a7527d.js.LICENSE.txt
+A	build/static/js/main.b5a7527d.js.map
+A	build/static/media/slick.2630a3e3eab21c607e21.svg
+A	build/static/media/slick.295183786cd8a1389865.woff
+A	build/static/media/slick.a4e97f5a2a64f0ab1323.eot
+A	build/static/media/slick.c94f7671dcc99dce43e2.ttf
+A	firebase.json
+A	firestore.indexes.json
+A	firestore.rules
+A	package-lock.json
+A	package.json
+A	public/index.html
