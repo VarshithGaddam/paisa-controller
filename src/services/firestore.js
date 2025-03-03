@@ -1,5 +1,5 @@
 import { db, auth } from '../firebase';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 export const addExpense = async (expense) => {
   const userId = auth.currentUser.uid;
@@ -13,6 +13,10 @@ export const getExpenses = async () => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+export const deleteExpense = async (expenseId) => {
+  await deleteDoc(doc(db, 'expenses', expenseId));
+};
+
 export const addBudget = async (budget) => {
   const userId = auth.currentUser.uid;
   await addDoc(collection(db, 'budgets'), { ...budget, userId });
@@ -23,4 +27,9 @@ export const getBudgets = async () => {
   const q = query(collection(db, 'budgets'), where('userId', '==', userId));
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const updateBudget = async (budgetId, updates) => {
+  const budgetRef = doc(db, 'budgets', budgetId);
+  await updateDoc(budgetRef, updates);
 };
