@@ -5,12 +5,14 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { getExpenses, getBudgets } from '../services/firestore';
-import { Facebook, Twitter, LinkedIn, AttachMoney, AccountBalance, Savings } from '@mui/icons-material';
+import { Facebook, Twitter, LinkedIn, CurrencyRupee } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Joyride from 'react-joyride';
 import Particles from 'react-tsparticles';
 import Skeleton from '@mui/lab/Skeleton';
+import { query, collection, where, onSnapshot } from 'firebase/firestore'; // Explicit import
+import { db, auth } from '../firebase';
 
 const HeroSection = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, #16161D 0%, #2E2E38 100%)',
@@ -125,14 +127,29 @@ const Dashboard = () => {
   const savingsGoal = parseFloat(localStorage.getItem('savingsGoal') || 0);
 
   useEffect(() => {
+    console.log('Firestore imports in Dashboard.js:', { query, collection, where, onSnapshot }); // Debug log
     const fetchData = async () => {
       const expensesData = await getExpenses();
       const budgetsData = await getBudgets();
+      const updatedBudgets = budgetsData.map(budget => {
+        const spent = expensesData
+          .filter(exp => exp.category === budget.category)
+          .reduce((sum, exp) => sum + exp.amount, 0);
+        return { ...budget, spent };
+      });
       setExpenses(expensesData);
-      setBudgets(budgetsData);
+      setBudgets(updatedBudgets);
       setLoading(false);
     };
+
     fetchData();
+
+    const expensesQuery = query(collection(db, 'expenses'), where('userId', '==', auth.currentUser.uid));
+    const unsubscribe = onSnapshot(expensesQuery, async () => {
+      await fetchData();
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const totalSpent = expenses.reduce((sum, expense) => sum + expense.amount, 0);
@@ -183,7 +200,7 @@ const Dashboard = () => {
             style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
           />
           <motion.div initial={{ rotate: 0 }} animate={{ rotate: 360 }} transition={{ duration: 1, ease: 'easeInOut' }}>
-            <AttachMoney sx={{ fontSize: 60, mb: 2, color: '#FFFFFF' }} />
+            <CurrencyRupee sx={{ fontSize: 60, mb: 2, color: '#FFFFFF' }} />
           </motion.div>
           <Typography
             variant="h2"
@@ -266,13 +283,13 @@ const Dashboard = () => {
             </Grid>
           ) : (
             <Slider {...sliderSettings}>
-              <Tooltip title={`Total expenditure: $${totalSpent.toFixed(2)}`}>
+              <Tooltip title={`Total expenditure: ₹${totalSpent.toFixed(2)}`}>
                 <WidgetCard initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
                   <CardContent sx={{ textAlign: 'center' }}>
                     <Box sx={{ position: 'relative', display: 'inline-flex', mb: 1 }}>
                       <CircularProgress variant="determinate" value={100} size={80} thickness={5} sx={{ color: '#dc004e' }} />
                       <Box sx={{ top: 0, left: 0, bottom: 0, right: 0, position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Typography variant="h5" sx={{ color: '#dc004e', fontWeight: 'bold' }}>${totalSpent.toFixed(2)}</Typography>
+                        <Typography variant="h5" sx={{ color: '#dc004e', fontWeight: 'bold' }}>₹{totalSpent.toFixed(2)}</Typography>
                       </Box>
                     </Box>
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Total Spent</Typography>
@@ -309,7 +326,7 @@ const Dashboard = () => {
                     </Box>
                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Savings Goal</Typography>
                     <Typography variant="body2" sx={{ mt: 1, color: 'rgba(255,255,255,0.8)' }}>
-                      ${totalSaved.toFixed(2)} / ${savingsGoal}
+                      ₹{totalSaved.toFixed(2)} / ₹{savingsGoal}
                     </Typography>
                   </CardContent>
                 </WidgetCard>
@@ -346,7 +363,7 @@ const Dashboard = () => {
               {budgets.length > 0 ? (
                 budgets.map((budget, index) => (
                   <Grid item xs={12} sm={6} md={4} key={budget.id}>
-                    <Tooltip title={`Remaining: $${(budget.limit - budget.spent).toFixed(2)}`}>
+                    <Tooltip title={`Remaining: ₹${(budget.limit - budget.spent).toFixed(2)}`}>
                       <WidgetCard
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -369,7 +386,7 @@ const Dashboard = () => {
                           </Box>
                           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{budget.category}</Typography>
                           <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
-                            Spent: ${budget.spent.toFixed(2)} / ${budget.limit.toFixed(2)}
+                            Spent: ₹{budget.spent.toFixed(2)} / ₹{budget.limit.toFixed(2)}
                           </Typography>
                           <Typography variant="body2" sx={{ mt: 1, color: budget.spent > budget.limit ? '#FF6384' : '#4BC0C0' }}>
                             {budget.spent > budget.limit ? 'Overspent!' : 'On Track'}
