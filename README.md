@@ -49,7 +49,7 @@ Paisa Controller is an AI-powered personal finance management web application de
 ### Installation
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/paisa-controller.git
+   git clone https://github.com/VarshithGaddam/paisa-controller.git
    cd paisa-controller
    npm install
    ```
