@@ -41,7 +41,7 @@ const Settings = () => {
   const { setPrimaryColor } = useCustomTheme();
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
-  const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'USD');
+  const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'INR');
   const [language, setLanguage] = useState('en');
   const [savingsGoal, setSavingsGoal] = useState(localStorage.getItem('savingsGoal') || 0);
   const [primaryColor, setLocalPrimaryColor] = useState(theme.palette.primary.main);
@@ -81,7 +81,6 @@ const Settings = () => {
 
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value);
-    // Implement language change logic here (e.g., i18n)
   };
 
   const handleSavingsGoalChange = (e) => {
@@ -169,7 +168,7 @@ const Settings = () => {
           sx={{ color: '#FFFFFF', mb: 2 }}
         />
         <TextField
-          label="Savings Goal ($)"
+          label="Savings Goal (₹)"
           type="number"
           value={savingsGoal}
           onChange={handleSavingsGoalChange}
