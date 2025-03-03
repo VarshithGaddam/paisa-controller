@@ -115,7 +115,7 @@ MIT License - feel free to use, modify, and distribute.
 
 ### Author: Varshith
 - **GitHub**: [Gaddam Varshith](https://github.com/VarshithGaddam)
-- **Deployed App**: [Paisa Controller](https://paisa-controller-3tf1p9uss-gaddamvarshiths-projects.vercel.app/
+- **Deployed App**: [Paisa Controller](https://paisa-controller-theta.vercel.app/
 
 )
 
