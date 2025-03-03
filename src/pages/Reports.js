@@ -97,9 +97,16 @@ const Reports = () => {
     const fetchData = async () => {
       const expensesData = await getExpenses();
       const budgetsData = await getBudgets();
+      const updatedBudgets = budgetsData.map(budget => {
+        const spent = expensesData
+          .filter(exp => exp.category === budget.category)
+          .reduce((sum, exp) => sum + exp.amount, 0);
+        return { ...budget, spent };
+      });
       setExpenses(expensesData);
-      setBudgets(budgetsData);
+      setBudgets(updatedBudgets);
     };
+
     fetchData();
   }, []);
 
@@ -191,7 +198,7 @@ const Reports = () => {
       },
       y: {
         beginAtZero: true,
-        title: { display: true, text: 'Amount ($)', color: '#16161D' },
+        title: { display: true, text: 'Amount (₹)', color: '#16161D' },
       },
     },
     plugins: {
@@ -214,7 +221,7 @@ const Reports = () => {
       return acc;
     }, {});
     const maxCategory = Object.entries(categoryTotals).reduce((a, b) => (a[1] > b[1] ? a : b), ['', 0]);
-    return `Consider reducing spending on ${maxCategory[0]} ($${maxCategory[1].toFixed(2)}) to stay within budget.`;
+    return `Consider reducing spending on ${maxCategory[0]} (₹${maxCategory[1].toFixed(2)}) to stay within budget.`;
   };
 
   const predictNextMonth = () => {
@@ -226,7 +233,7 @@ const Reports = () => {
     }, {});
     const totals = Object.values(monthlyTotals);
     const avgIncrease = (totals[totals.length - 1] - totals[0]) / (totals.length - 1);
-    return `Predicted next month: $${(totals[totals.length - 1] + avgIncrease).toFixed(2)}`;
+    return `Predicted next month: ₹${(totals[totals.length - 1] + avgIncrease).toFixed(2)}`;
   };
 
   const csvData = expenses.map(exp => ({
@@ -271,7 +278,7 @@ const Reports = () => {
                     textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                   }}
                 >
-                  ${totalSpent.toFixed(2)}
+                  ₹{totalSpent.toFixed(2)}
                 </Typography>
               </Box>
             </Box>
@@ -296,7 +303,7 @@ const Reports = () => {
                     textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                   }}
                 >
-                  ${(totalBudgetLimit - totalSpent).toFixed(2)}
+                  ₹{(totalBudgetLimit - totalSpent).toFixed(2)}
                 </Typography>
               </Box>
             </Box>
