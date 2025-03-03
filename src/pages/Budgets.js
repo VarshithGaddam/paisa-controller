@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Button, TextField, Grid, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { addBudget, getBudgets } from '../services/firestore';
+import { addBudget, getBudgets, updateBudget } from '../services/firestore';
 import { useSnackbar } from 'notistack';
-import { query, collection, where, onSnapshot } from 'firebase/firestore';
+import { query, collection, where, onSnapshot } from 'firebase/firestore'; // Explicit import
 import { db, auth } from '../firebase';
+import { getExpenses } from '../services/firestore';
 
 const BudgetOverview = styled(Box)(({ theme }) => ({
   textAlign: 'center',
@@ -30,24 +31,49 @@ const Budgets = () => {
   const [limit, setLimit] = useState('');
   const { enqueueSnackbar } = useSnackbar();
 
-  const fetchBudgets = async () => {
-    const data = await getBudgets();
-    setBudgets(data);
+  const fetchBudgetsAndExpenses = async () => {
+    const budgetsData = await getBudgets();
+    const expensesData = await getExpenses();
+    const updatedBudgets = budgetsData.map(budget => {
+      const spent = expensesData
+        .filter(exp => exp.category === budget.category)
+        .reduce((sum, exp) => sum + exp.amount, 0);
+      return { ...budget, spent };
+    });
+    setBudgets(updatedBudgets);
+    updatedBudgets.forEach(budget => updateBudget(budget.id, { spent: budget.spent }));
   };
 
   useEffect(() => {
-    fetchBudgets();
-    const q = query(collection(db, 'budgets'), where('userId', '==', auth.currentUser.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.docs.forEach(doc => {
-        const { spent, limit, category } = doc.data();
-        if (spent > limit) {
-          enqueueSnackbar(`Budget "${category}" exceeded!`, { variant: 'warning' });
-        }
-      });
-      setBudgets(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    console.log('Firestore imports in Budgets.js:', { query, collection, where, onSnapshot }); // Debug log
+    fetchBudgetsAndExpenses();
+    const expensesQuery = query(collection(db, 'expenses'), where('userId', '==', auth.currentUser.uid));
+    const budgetsQuery = query(collection(db, 'budgets'), where('userId', '==', auth.currentUser.uid));
+    
+    const unsubscribeExpenses = onSnapshot(expensesQuery, async () => {
+      await fetchBudgetsAndExpenses();
     });
-    return () => unsubscribe();
+
+    const unsubscribeBudgets = onSnapshot(budgetsQuery, async (snapshot) => {
+      const expensesData = await getExpenses();
+      const updatedBudgets = snapshot.docs.map(doc => {
+        const data = doc.data();
+        const spent = expensesData
+          .filter(exp => exp.category === data.category)
+          .reduce((sum, exp) => sum + exp.amount, 0);
+        if (spent > data.limit) {
+          enqueueSnackbar(`Budget "${data.category}" exceeded!`, { variant: 'warning' });
+        }
+        return { id: doc.id, ...data, spent };
+      });
+      setBudgets(updatedBudgets);
+      updatedBudgets.forEach(budget => updateBudget(budget.id, { spent: budget.spent }));
+    });
+
+    return () => {
+      unsubscribeExpenses();
+      unsubscribeBudgets();
+    };
   }, []);
 
   const handleAddBudget = async () => {
@@ -55,7 +81,7 @@ const Budgets = () => {
       await addBudget({ category, limit: Number(limit), spent: 0 });
       setCategory('');
       setLimit('');
-      await fetchBudgets();
+      await fetchBudgetsAndExpenses();
     }
   };
 
@@ -114,7 +140,7 @@ const Budgets = () => {
           InputLabelProps={{ style: { color: '#666666' } }}
         />
         <TextField
-          label="Limit"
+          label="Limit (₹)"
           type="number"
           value={limit}
           onChange={(e) => setLimit(e.target.value)}
@@ -136,7 +162,7 @@ const Budgets = () => {
             <GlassCard>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{budget.category}</Typography>
               <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
-                Spent: ${budget.spent.toFixed(2)} / ${budget.limit.toFixed(2)}
+                Spent: ₹{budget.spent.toFixed(2)} / ₹{budget.limit.toFixed(2)}
               </Typography>
               <Box sx={{ mt: 1 }}>
                 <CircularProgress
