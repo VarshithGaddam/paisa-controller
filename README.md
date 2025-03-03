@@ -114,6 +114,8 @@ firebase deploy
 MIT License - feel free to use, modify, and distribute.
 
 ### Author: Varshith
-- **GitHub**: [your-username](https://github.com/VarshithGaddam)
-- **Deployed App**: [Paisa Controller](https://paisa-controller-12345.web.app)
+- **GitHub**: [Gaddam Varshith](https://github.com/VarshithGaddam)
+- **Deployed App**: [Paisa Controller](https://paisa-controller-3tf1p9uss-gaddamvarshiths-projects.vercel.app/
+
+)
 
