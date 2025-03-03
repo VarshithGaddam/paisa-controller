@@ -3,7 +3,7 @@ import { Typography, Box, Table, TableBody, TableCell, TableHead, TableRow, Butt
 import { styled } from '@mui/material/styles';
 import { keyframes } from '@mui/system';
 import ExpenseForm from '../components/ExpenseForm';
-import { getExpenses } from '../services/firestore';
+import { getExpenses, deleteExpense } from '../services/firestore';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -29,6 +29,11 @@ const Expenses = () => {
   };
 
   const handleExpenseAdded = async () => {
+    await fetchExpenses();
+  };
+
+  const handleDeleteExpense = async (expenseId) => {
+    await deleteExpense(expenseId);
     await fetchExpenses();
   };
 
@@ -70,12 +75,14 @@ const Expenses = () => {
         <TableBody>
           {filteredExpenses.map(expense => (
             <ExpenseRow key={expense.id}>
-              <TableCell sx={{ color: theme => theme.palette.text.primary }}>${expense.amount.toFixed(2)}</TableCell>
+              <TableCell sx={{ color: theme => theme.palette.text.primary }}>₹{expense.amount.toFixed(2)}</TableCell>
               <TableCell sx={{ color: theme => theme.palette.text.primary }}>{expense.description}</TableCell>
               <TableCell sx={{ color: theme => theme.palette.text.primary }}>{expense.category}</TableCell>
               <TableCell sx={{ color: theme => theme.palette.text.primary }}>{new Date(expense.date).toLocaleDateString()}</TableCell>
               <TableCell>
-                <Button color="error" size="small">Delete</Button>
+                <Button color="error" size="small" onClick={() => handleDeleteExpense(expense.id)}>
+                  Delete
+                </Button>
               </TableCell>
             </ExpenseRow>
           ))}
