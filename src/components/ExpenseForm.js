@@ -29,13 +29,26 @@ const ExpenseForm = ({ onExpenseAdded }) => {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     setImage(file);
-    Tesseract.recognize(file, 'eng')
-      .then(({ data: { text } }) => {
-        const amountMatch = text.match(/\$?(\d+\.?\d*)/);
+    Tesseract.recognize(file, 'eng', {
+      logger: m => console.log(m),
+    })
+      .then(({ data }) => {
+        console.log('Tesseract Result:', data);
+        if (!data || !data.text) {
+          console.error('No text recognized from image');
+          return;
+        }
+        const text = data.text;
+        const amountMatch = text.match(/₹?(\d+\.?\d*)/); // Recognize ₹
         const descMatch = text.replace(amountMatch?.[0] || '', '').trim();
         setAmount(amountMatch ? amountMatch[1] : '');
         setDescription(descMatch || 'Receipt Item');
+      })
+      .catch(error => {
+        console.error('Tesseract Error:', error);
+        alert('Failed to process image. Please try another.');
       });
   };
 
@@ -78,7 +91,7 @@ const ExpenseForm = ({ onExpenseAdded }) => {
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
       <TextField
-        label="Amount"
+        label="Amount (₹)"
         type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}

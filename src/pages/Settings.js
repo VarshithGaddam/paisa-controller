@@ -6,21 +6,20 @@ import { signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { useCustomTheme } from '../App';
 
 const SettingsContainer = styled(Box)(({ theme }) => ({
-  background: theme.palette.background.default,
+  background: 'linear-gradient(135deg, #F5F5F5, #FFFFFF)',
   padding: theme.spacing(4),
   minHeight: '100vh',
 }));
 
 const GlassCard = styled(motion.div)(({ theme }) => ({
-  background: 'linear-gradient(145deg, #3C3C46, #2E2E38)',
-  borderRadius: '16px',
-  boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.1), 0 8px 16px rgba(0,0,0,0.2)',
+  background: 'rgba(255, 255, 255, 0.9)',
   backdropFilter: 'blur(10px)',
+  borderRadius: '20px',
+  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   padding: theme.spacing(3),
-  color: '#FFFFFF',
+  color: '#16161D',
   border: '1px solid rgba(255,255,255,0.1)',
   marginBottom: theme.spacing(3),
 }));
@@ -28,9 +27,9 @@ const GlassCard = styled(motion.div)(({ theme }) => ({
 const SectionTitle = styled(Typography)(({ theme }) => ({
   fontFamily: 'Poppins, sans-serif',
   fontWeight: 'bold',
-  color: '#FFFFFF',
+  color: '#16161D',
   letterSpacing: '1.5px',
-  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+  textShadow: '0 2px 4px rgba(0,0,0,0.1)',
   marginBottom: theme.spacing(2),
 }));
 
@@ -38,18 +37,17 @@ const Settings = () => {
   const navigate = useNavigate();
   const user = auth.currentUser;
   const theme = useTheme();
-  const { setPrimaryColor } = useCustomTheme();
   const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [photoURL, setPhotoURL] = useState(user?.photoURL || '');
-  const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'USD');
+  const [currency, setCurrency] = useState(localStorage.getItem('currency') || 'INR');
   const [language, setLanguage] = useState('en');
   const [savingsGoal, setSavingsGoal] = useState(localStorage.getItem('savingsGoal') || 0);
-  const [primaryColor, setLocalPrimaryColor] = useState(theme.palette.primary.main);
+  const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main);
   const [rates, setRates] = useState({});
   const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
 
   useEffect(() => {
-    axios.get('https://api.exchangeratesapi.io/v1/latest?access_key=YOUR_API_KEY') // Replace with your API key
+    axios.get('https://api.exchangeratesapi.io/v1/latest?access_key=YOUR_API_KEY')
       .then(response => setRates(response.data.rates))
       .catch(error => console.error('Error fetching exchange rates:', error));
   }, []);
@@ -81,7 +79,6 @@ const Settings = () => {
 
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value);
-    // Implement language change logic here (e.g., i18n)
   };
 
   const handleSavingsGoalChange = (e) => {
@@ -90,7 +87,6 @@ const Settings = () => {
   };
 
   const handleColorChange = (e) => {
-    setLocalPrimaryColor(e.target.value);
     setPrimaryColor(e.target.value);
   };
 
@@ -118,19 +114,19 @@ const Settings = () => {
               label="Name"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              sx={{ mb: 2, input: { color: '#FFFFFF' }, label: { color: 'rgba(255,255,255,0.8)' } }}
+              sx={{ mb: 2, input: { color: '#16161D' }, label: { color: '#666' } }}
             />
             <Button
               variant="contained"
-              sx={{ background: 'linear-gradient(45deg, #16161D, #2E2E38)', color: '#FFFFFF' }}
+              sx={{ background: '#FF6200', color: '#FFFFFF', borderRadius: '20px' }}
               onClick={handleNameUpdate}
             >
               Update Name
             </Button>
           </Box>
         </Box>
-        <input type="file" accept="image/*" onChange={handlePhotoUpload} style={{ color: '#FFFFFF' }} />
-        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', mt: 1 }}>
+        <input type="file" accept="image/*" onChange={handlePhotoUpload} style={{ color: '#16161D' }} />
+        <Typography variant="body2" sx={{ color: '#666', mt: 1 }}>
           Email: {user?.email}
         </Typography>
       </GlassCard>
@@ -138,12 +134,12 @@ const Settings = () => {
       <GlassCard initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>Customization</Typography>
         <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel sx={{ color: 'rgba(255,255,255,0.8)' }}>Currency</InputLabel>
+          <InputLabel sx={{ color: '#666' }}>Currency</InputLabel>
           <Select
             value={currency}
             onChange={handleCurrencyChange}
             label="Currency"
-            sx={{ color: '#FFFFFF' }}
+            sx={{ color: '#16161D' }}
           >
             {Object.keys(rates).map(curr => (
               <MenuItem key={curr} value={curr}>{curr}</MenuItem>
@@ -151,12 +147,12 @@ const Settings = () => {
           </Select>
         </FormControl>
         <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel sx={{ color: 'rgba(255,255,255,0.8)' }}>Language</InputLabel>
+          <InputLabel sx={{ color: '#666' }}>Language</InputLabel>
           <Select
             value={language}
             onChange={handleLanguageChange}
             label="Language"
-            sx={{ color: '#FFFFFF' }}
+            sx={{ color: '#16161D' }}
           >
             <MenuItem value="en">English</MenuItem>
             <MenuItem value="es">Spanish</MenuItem>
@@ -166,15 +162,15 @@ const Settings = () => {
         <FormControlLabel
           control={<Switch defaultChecked={theme.palette.mode === 'dark'} />}
           label="Dark Mode"
-          sx={{ color: '#FFFFFF', mb: 2 }}
+          sx={{ color: '#16161D', mb: 2 }}
         />
         <TextField
-          label="Savings Goal ($)"
+          label="Savings Goal (₹)"
           type="number"
           value={savingsGoal}
           onChange={handleSavingsGoalChange}
           fullWidth
-          sx={{ mb: 2, input: { color: '#FFFFFF' }, label: { color: 'rgba(255,255,255,0.8)' } }}
+          sx={{ mb: 2, input: { color: '#16161D' }, label: { color: '#666' } }}
         />
         <TextField
           label="Primary Color"
@@ -190,14 +186,14 @@ const Settings = () => {
         <Typography variant="h6" sx={{ mb: 2 }}>Security</Typography>
         <Button
           variant="outlined"
-          sx={{ color: '#FFFFFF', borderColor: '#FFFFFF', mb: 2 }}
+          sx={{ color: '#FF6200', borderColor: '#FF6200', mb: 2, borderRadius: '20px' }}
           onClick={() => alert('Change Password feature coming soon!')}
         >
           Change Password
         </Button>
         <Button
           variant="contained"
-          sx={{ background: 'linear-gradient(45deg, #16161D, #2E2E38)', color: '#FFFFFF' }}
+          sx={{ background: '#FF6200', color: '#FFFFFF', borderRadius: '20px' }}
           onClick={() => setOpenLogoutDialog(true)}
         >
           Logout
@@ -208,14 +204,14 @@ const Settings = () => {
         <Typography variant="h6" sx={{ mb: 2 }}>Support & Info</Typography>
         <Button
           variant="text"
-          sx={{ color: '#FFFFFF', mb: 1, display: 'block' }}
+          sx={{ color: '#FF6200', mb: 1, display: 'block' }}
           href="mailto:support@paisacontroller.com"
         >
           Help & Support
         </Button>
         <Button
           variant="text"
-          sx={{ color: '#FFFFFF' }}
+          sx={{ color: '#FF6200' }}
           href="https://example.com/terms"
           target="_blank"
         >
@@ -230,7 +226,7 @@ const Settings = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenLogoutDialog(false)} sx={{ color: '#16161D' }}>Cancel</Button>
-          <Button onClick={handleLogout} sx={{ color: '#dc004e' }}>Logout</Button>
+          <Button onClick={handleLogout} sx={{ color: '#FF6200' }}>Logout</Button>
         </DialogActions>
       </Dialog>
     </SettingsContainer>
