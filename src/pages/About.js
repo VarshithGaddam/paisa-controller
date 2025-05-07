@@ -27,7 +27,7 @@ const About = () => {
         gutterBottom
         sx={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', color: '#16161D', mb: 6 }}
       >
-        About Paisa Controller
+        About Financial Manager
       </Typography>
       <Grid container spacing={4}>
         <Grid item xs={12}>
@@ -36,7 +36,7 @@ const About = () => {
               Our Mission
             </Typography>
             <Typography sx={{ color: '#666' }}>
-              At Paisa Controller, our mission is to empower individuals to take control of their finances with ease and confidence. We provide AI-driven insights to help you manage expenses, budgets, and savings effectively.
+              At Financial Manager, our mission is to empower individuals to take control of their finances with ease and confidence. We provide AI-driven insights to help you manage expenses, budgets, and savings effectively.
             </Typography>
           </GlassCard>
         </Grid>
@@ -56,7 +56,7 @@ const About = () => {
               Why Choose Us
             </Typography>
             <Typography sx={{ color: '#666' }}>
-              With real-time insights, a user-friendly interface, and secure cloud sync, Paisa Controller stands out as your go-to financial companion. Join thousands of users who trust us to manage their money smarter.
+              With real-time insights, a user-friendly interface, and secure cloud sync, Financial Manager stands out as your go-to financial companion. Join thousands of users who trust us to manage their money smarter.
             </Typography>
           </GlassCard>
         </Grid>
