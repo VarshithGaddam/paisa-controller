@@ -538,7 +538,7 @@ const Dashboard = () => {
                 Contact Us
               </Typography>
               <FooterLink href="mailto:support@paisacontroller.com">
-                <Email sx={{ mr: 1 }} /> support@paisacontroller.com
+                <Email sx={{ mr: 1 }} /> support@FinancialManager.com
               </FooterLink>
               <FooterLink href="tel:+1234567890">
                 <Phone sx={{ mr: 1 }} /> +1 234 567 890
@@ -582,7 +582,7 @@ const Dashboard = () => {
             </Grid>
           </Grid>
           <Typography variant="body2" sx={{ mt: 4 }}>
-            Paisa Controller © 2025 | Powered by xAI | All Rights Reserved
+            Financial Managaer © 2025 | All Rights Reserved
           </Typography>
         </Footer>
 
