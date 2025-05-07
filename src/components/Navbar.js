@@ -47,7 +47,7 @@ const Navbar = () => {
               alignItems: 'center',
             }}
           >
-            <CurrencyRupee sx={{ mr: 1, fontSize: '2rem', color: '#FF6200' }} /> Paisa Controller
+            <CurrencyRupee sx={{ mr: 1, fontSize: '2rem', color: '#FF6200' }} /> Financial Manager
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
