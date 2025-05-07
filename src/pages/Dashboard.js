@@ -214,7 +214,7 @@ const Dashboard = () => {
   };
 
   const steps = [
-    { target: '.hero', content: 'Welcome to Paisa Controller! Manage your finances with ease.' },
+    { target: '.hero', content: 'Welcome to Financial Manager! Manage your finances with ease.' },
     { target: '.insights', content: 'Get quick financial insights with these widgets.' },
     { target: '.budgets', content: 'Track your budgets in real-time.' },
     { target: '.stocks', content: 'Explore stock market data and link your budgets.' },
