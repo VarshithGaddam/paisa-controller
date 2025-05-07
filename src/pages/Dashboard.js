@@ -509,10 +509,10 @@ const Dashboard = () => {
         <AboutSection>
           <GlassCard initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Typography variant="h4" gutterBottom sx={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', color: '#16161D' }}>
-              Why Paisa Controller?
+              Why Financial Manager?
             </Typography>
             <Typography variant="body1" sx={{ maxWidth: 800, mx: 'auto', fontFamily: 'Poppins, sans-serif', color: '#666' }}>
-              Built with cutting-edge AI, Paisa Controller simplifies personal finance with real-time insights, intuitive design, and seamless cloud sync. Perfect for managing your expenses, budgets, stocks, and predictions on the go!
+              Built with cutting-edge AI, Financial Manager simplifies personal finance with real-time insights, intuitive design, and seamless cloud sync. Perfect for managing your expenses, budgets, stocks, and predictions on the go!
             </Typography>
           </GlassCard>
         </AboutSection>
