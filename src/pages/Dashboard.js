@@ -290,7 +290,7 @@ const Dashboard = () => {
             <CurrencyRupee sx={{ fontSize: 80, mb: 2, color: '#FFFFFF' }} />
           </motion.div>
           <Typography variant="h2" gutterBottom sx={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'bold', color: '#FFFFFF', letterSpacing: '1px', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
-            Paisa Controller
+            Financial Manager
           </Typography>
           <Typography variant="h5" gutterBottom sx={{ fontFamily: 'Poppins, sans-serif', fontWeight: 300, color: '#FFFFFF', mb: 4 }}>
             Track expenses, manage budgets, and save smarter!
