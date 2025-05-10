@@ -30,7 +30,7 @@ const Login = () => {
   return (
     <LoginContainer>
       <Typography variant="h4" gutterBottom sx={{ color: theme => theme.palette.text.primary }}>
-        Welcome to Paisa Controller
+        Welcome to Financial Manager
       </Typography>
       <Button
         variant="contained"
